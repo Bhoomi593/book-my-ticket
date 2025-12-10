@@ -27,7 +27,7 @@ public class EmailHelper {
 			helper.setSubject("OTP for creating account with BookMyTicket");
 			Context context=new Context();
 			context.setVariable("name",name);
-			context.setVariable("otp", otp);
+			context.setVariable("otp", otp);g
 			String text=templateEngine.process("email-template.html", context);
 			helper.setText(text,true);
 			mailSender.send(mimeMessage);
