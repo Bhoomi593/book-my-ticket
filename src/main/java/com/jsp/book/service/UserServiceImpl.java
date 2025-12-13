@@ -13,7 +13,9 @@ import com.jsp.book.dto.PasswordDto;
 import com.jsp.book.dto.ScreenDto;
 import com.jsp.book.dto.TheaterDto;
 import com.jsp.book.dto.UserDto;
+import com.jsp.book.entity.User;
 import com.jsp.book.repository.UserRepository;
+import com.jsp.book.util.AES;
 import com.jsp.book.util.EmailHelper;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,29 +34,100 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public String register(UserDto userDto, BindingResult result, RedirectAttributes attributes) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!userDto.getPassword().equals(userDto.getConfirmPassword()))
+			result.rejectValue("confirmPassword", "error.confirmPassword","*password and confirmPassword should be same");
+		if(userRepository.existByEmail(userDto.getEmail()))
+			result.rejectValue("email", "error.email","*Email should be unique");
+		if(userRepository.existsByMobile(userDto.getMobile()))
+			result.rejectValue("mobile", "error.mobile","*Mobile number should be unique");
+		
+		if(result.hasErrors())
+		return "register.html";
+		
+		else {
+			int otp = random.nextInt(100000,1000000);
+			emailHelper.sendOtp(otp, userDto.getName(), userDto.getEmail());
+			redisService.saveUserDto(userDto.getEmail(), userDto);
+			redisService.saveOtp(userDto.getEmail(), otp);
+			attributes.addFlashAttribute("pass","otp sent success");
+			attributes.addFlashAttribute("email", userDto.getEmail());
+			return "redirect:/otp";
+		}
 	}
+	
 	@Override
 	public String login(LoginDto dto, RedirectAttributes attributes, HttpSession session) {
-		// TODO Auto-generated method stub
-		return null;
+		User user= userRepository.findByEmail(dto.getEmail());
+		if (user==null) {
+			attributes.addFlashAttribute("fail", "Invalid email");
+			return "redirect:/login";
+		} else {
+			if (AES.decrypt(user.getPassword()).equals(dto.getPassword())) {
+				if (user.isBlocked()) {
+					attributes.addFlashAttribute("fail", "account blocked!, contact admin");
+					return "redirect:/login";
+				}
+				session.setAttribute("user", user);
+				attributes.addFlashAttribute("pass", "Login success");
+				return "redirect:/main";
+			} else {
+				attributes.addFlashAttribute("fail", "Invalid password");
+				return "redirect:/login";
+			}
+		}
 	}
+	
 	@Override
 	public String logout(HttpSession session, RedirectAttributes attributes) {
-		// TODO Auto-generated method stub
-		return null;
+		session.removeAttribute("user");
+		attributes.addFlashAttribute("pass", "Logout success");
+		return "redirect:/main";
 	}
+	
 	@Override
 	public String submitOtp(int otp, String email, RedirectAttributes attributes) {
-		// TODO Auto-generated method stub
-		return null;
+		UserDto dto=redisService.getDtoByEmail(email);
+		if (dto==null) {
+			attributes.addFlashAttribute("fail", "Time out Try again creating new account");
+			return "redirect:/register";
+		} else {
+			int exOtp =redisService.getOtpByEmail(email);
+			if (exOtp==0) {
+				attributes.addFlashAttribute("fail", "OTP is expired, Resend OTP again");
+				attributes.addFlashAttribute("email",email);
+				return "redirect:/otp";
+			} else {
+				if (otp==exOtp) {
+					User user=new User(null, dto.getName(),dto.getEmail(),dto.getMobile(),AES.encrypt(dto.getConfirmPassword()),"USER",false);
+					userRepository.save(user);
+					attributes.addFlashAttribute("pass", "Account registered success");
+					return "redirect:/main";
+				} else {
+					attributes.addFlashAttribute("fail", "Invalid OTP Try again");
+					attributes.addFlashAttribute("email",email);
+					return "redirect:/otp";
+				}
+			}
+		}
 	}
+	
 	@Override
 	public String resendOtp(String email, RedirectAttributes attributes) {
-		// TODO Auto-generated method stub
-		return null;
+		UserDto dto=redisService.getDtoByEmail(email);
+		if(dto==null) {
+			attributes.addFlashAttribute("fail","Timeout try agaun creating new account");
+			return "redirect:/register";
+		} else {
+			int otp = random.nextInt(100000,1000000);
+			emailHelper.sendOtp(otp, dto.getName(), dto.getEmail());
+			redisService.saveUserDto(dto.getEmail(), dto);
+			redisService.saveOtp(dto.getEmail(), otp);
+			attributes.addFlashAttribute("pass","otp sent success");
+			attributes.addFlashAttribute("email", dto.getEmail());
+			return "redirect:/otp";
+		}
 	}
+	
 	@Override
 	public String forgetPassword(String email, RedirectAttributes attributes) {
 		// TODO Auto-generated method stub
