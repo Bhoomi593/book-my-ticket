@@ -18,25 +18,37 @@ import jakarta.validation.Valid;
 
 public interface UserService {
 	
-	String register(UserDto userDto, BindingResult result,RedirectAttributes attributes);
-
+	/*------------Common--------------*/
+	
+	String loadMain(ModelMap map);
+	
 	String login(LoginDto dto, RedirectAttributes attributes,HttpSession session);
 
 	String logout(HttpSession session, RedirectAttributes attributes);
+	
+	/*---------------Registration & OTP------------------*/
+	
+	String register(UserDto userDto, BindingResult result,RedirectAttributes attributes);
 
 	String submitOtp(int otp, String email, RedirectAttributes attributes);
 	
 	String resendOtp(String email, RedirectAttributes attributes);
 	
+	/*---------------Password-------------*/
+	
 	String forgetPassword(String email, RedirectAttributes attributes);
 	
 	String resetPassword(PasswordDto passwordDto, BindingResult result, RedirectAttributes attributes, ModelMap map);
+	
+	/*-------------User(Admin)---------------*/
 	
 	String manageUser(HttpSession session, RedirectAttributes attributes, ModelMap map);
 	
 	String blockUser(Long id, HttpSession session, RedirectAttributes attributes);
 	
 	String unblockUser(Long id, HttpSession session, RedirectAttributes attributes);
+	
+	/*-----------------Theater---------------*/
 	
 	String manageTheater(ModelMap map, RedirectAttributes attributes, HttpSession session);
 	
@@ -50,6 +62,8 @@ public interface UserService {
 	
 	String updateTheater(Long id, HttpSession session, RedirectAttributes attributes, @Valid TheaterDto theaterDto, BindingResult result);
 	
+	/*--------------Screen--------------*/
+	
 	String manageScreen(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
 	
 	String addScreen(Long id, HttpSession session, RedirectAttributes attributes, @Valid ScreenDto screenDto, BindingResult result, ModelMap map);
@@ -60,7 +74,11 @@ public interface UserService {
 	
 	String updateScreen(Long id, HttpSession session, RedirectAttributes attributes, @Valid ScreenDto screenDto, BindingResult result, ModelMap map);
 	
+	/*--------------Seats------------*/
+	
 	String manageSeats(Long id, HttpSession session,RedirectAttributes attributes, ModelMap map);
 	
 	String addSeats(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
+	
+//	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
 }

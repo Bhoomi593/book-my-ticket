@@ -5,34 +5,45 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
-import ch.qos.logback.core.Context;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class EmailHelper {
+	
+	private static final String FROM_EMAIL="book-my-ticket.com";
+	private static final String FROM_NAME="Book-My-Ticket";
+	private static final String SUBJECT="Otp for Creating Account with BookMyTicket";
+	private static final String TEMPLATE="email-template.html";
 
-	public final JavaMailSender mailSender;
-	public final TemplateEngine templateEngine;
+	private final JavaMailSender mailSender;
+	private final TemplateEngine templateEngine;
 	
 	@Async
 	public void sendOtp(int otp, String name, String email) {
-		MimeMessage mimeMessage=mailSender.createMimeMessage();
-		MimeMessageHelper helper=new MimeMessageHelper(mimeMessage);
+		
 		try {
-			helper.setFrom("book-my-ticket.com","Book-My-Ticket");
+			MimeMessage message=mailSender.createMimeMessage();
+			MimeMessageHelper helper=new MimeMessageHelper(message);
+			
+			helper.setFrom(FROM_EMAIL, FROM_NAME);
 			helper.setTo(email);
-			helper.setSubject("OTP for creating account with BookMyTicket");
+			helper.setSubject(SUBJECT);
+			
 			Context context=new Context();
 			context.setVariable("name",name);
-			context.setVariable("otp", otp);g
-			String text=templateEngine.process("email-template.html", context);
-			helper.setText(text,true);
-			mailSender.send(mimeMessage);
+			context.setVariable("otp", otp);
+			
+			String body=templateEngine.process(TEMPLATE, context);
+			helper.setText(body, true);
+			
+			mailSender.send(message);
+			
 		} catch (Exception e) {
-			System.out.println("Failed to send OTP: "+ otp);
+			System.out.println("Failed to send OTP: "+ email);
 		}
 	}
 }
