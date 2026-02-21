@@ -36,7 +36,7 @@ public interface UserService {
 	
 	/*---------------Password-------------*/
 	
-	String forgetPassword(String email, RedirectAttributes attributes);
+	String forgotPassword(String email, RedirectAttributes attributes);
 	
 	String resetPassword(PasswordDto passwordDto, BindingResult result, RedirectAttributes attributes, ModelMap map);
 	
@@ -60,25 +60,40 @@ public interface UserService {
 	
 	String editTheater(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
 	
-	String updateTheater(Long id, HttpSession session, RedirectAttributes attributes, @Valid TheaterDto theaterDto, BindingResult result);
+	String updateTheater(HttpSession session, RedirectAttributes attributes, @Valid TheaterDto theaterDto, @Valid BindingResult result, Long id);
 	
 	/*--------------Screen--------------*/
-	
-	String manageScreen(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
-	
-	String addScreen(Long id, HttpSession session, RedirectAttributes attributes, @Valid ScreenDto screenDto, BindingResult result, ModelMap map);
-	
-	String deleteScreen(Long id, HttpSession session, RedirectAttributes attributes);
-	
+
+	String manageScreens(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
+
+	String addScreen(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map, ScreenDto screenDto);
+
+	String addScreen(ScreenDto screenDto, BindingResult result, HttpSession session, RedirectAttributes attributes);
+
 	String editScreen(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
-	
-	String updateScreen(Long id, HttpSession session, RedirectAttributes attributes, @Valid ScreenDto screenDto, BindingResult result, ModelMap map);
-	
-	/*--------------Seats------------*/
-	
-	String manageSeats(Long id, HttpSession session,RedirectAttributes attributes, ModelMap map);
-	
+
+	String updateScreen(ScreenDto screenDto, Long id, BindingResult result, HttpSession session,
+			RedirectAttributes attributes, ModelMap map);
+
+	String deleteScreen(Long id, HttpSession session, RedirectAttributes attributes);
+
+	/* ---------- Seats ---------- */
+
+	String manageSeats(Long id, HttpSession session, ModelMap map, RedirectAttributes attributes);
+
 	String addSeats(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
-	
-//	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
+
+	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
+
+	/* ---------- Movie ---------- */
+
+	String manageMovies(HttpSession session, RedirectAttributes attributes, ModelMap map);
+
+	String loadAddMovie(MovieDto movieDto, RedirectAttributes attributes, HttpSession session);
+
+	String addMovie(MovieDto movieDto, BindingResult result, RedirectAttributes attributes, HttpSession session);
+
+	String deleteMovie(Long id, HttpSession session, RedirectAttributes attributes);
+
+
 }
