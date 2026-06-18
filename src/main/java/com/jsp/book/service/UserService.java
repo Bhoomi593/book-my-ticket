@@ -1,16 +1,22 @@
 package com.jsp.book.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.zxing.WriterException;
 import com.jsp.book.dto.LoginDto;
+import com.jsp.book.dto.MovieDto;
 import com.jsp.book.dto.PasswordDto;
 import com.jsp.book.dto.ScreenDto;
+import com.jsp.book.dto.SeatLayoutForm;
+import com.jsp.book.dto.ShowDto;
 import com.jsp.book.dto.TheaterDto;
 import com.jsp.book.dto.UserDto;
+import com.razorpay.RazorpayException;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
@@ -42,12 +48,12 @@ public interface UserService {
 	
 	/*-------------User(Admin)---------------*/
 	
-	String manageUser(HttpSession session, RedirectAttributes attributes, ModelMap map);
-	
+	String manageUsers(HttpSession session, RedirectAttributes attributes, ModelMap map);
+
 	String blockUser(Long id, HttpSession session, RedirectAttributes attributes);
-	
+
 	String unBlockUser(Long id, HttpSession session, RedirectAttributes attributes);
-	
+
 	/*-----------------Theater---------------*/
 	
 	String manageTheater(ModelMap map, RedirectAttributes attributes, HttpSession session);
@@ -77,15 +83,12 @@ public interface UserService {
 
 	String deleteScreen(Long id, HttpSession session, RedirectAttributes attributes);
 
+
 	/* ---------- Seats ---------- */
 
 	String manageSeats(Long id, HttpSession session, ModelMap map, RedirectAttributes attributes);
 
-	String addSeats(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
-<<<<<<< HEAD:src/main/java/com/jsp/book/service/UserService.java
-	
-	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
-=======
+	String addSeats(Long id, HttpSession session, ModelMap map, RedirectAttributes attributes);
 
 	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
 
@@ -99,6 +102,26 @@ public interface UserService {
 
 	String deleteMovie(Long id, HttpSession session, RedirectAttributes attributes);
 
+	/* ---------- Show & Booking ---------- */
 
->>>>>>> fc778ca6467b98d9bb139831bed3d04755a046e6:main/java/com/jsp/book/service/UserService.java
+	String manageShows(Long id, ModelMap map, RedirectAttributes attributes, HttpSession session);
+
+	String addShow(Long id, ModelMap map, RedirectAttributes attributes, HttpSession session);
+
+	String addShow(ShowDto showDto, BindingResult result, RedirectAttributes attributes, HttpSession session,
+			ModelMap map);
+
+	String displayShowsOnDate(LocalDate date, Long movieId, RedirectAttributes attributes, ModelMap map);
+
+	String bookMovie(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
+
+	String showSeats(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
+
+	String deleteShow(Long id, HttpSession session, RedirectAttributes attributes);
+
+	String confirmBooking(Long showId, Long[] seatIds, HttpSession session, ModelMap map, RedirectAttributes attributes)
+			throws RazorpayException;
+
+	String confirmTicket(HttpSession session, ModelMap map, RedirectAttributes attributes, String razorpay_order_id,
+			String razorpay_payment_id) throws IOException, WriterException;
 }

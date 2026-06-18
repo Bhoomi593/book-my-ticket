@@ -1,6 +1,7 @@
 package com.jsp.book.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,12 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.zxing.WriterException;
 import com.jsp.book.dto.LoginDto;
+import com.jsp.book.dto.MovieDto;
 import com.jsp.book.dto.PasswordDto;
 import com.jsp.book.dto.ScreenDto;
+import com.jsp.book.dto.SeatLayoutForm;
+import com.jsp.book.dto.ShowDto;
 import com.jsp.book.dto.TheaterDto;
 import com.jsp.book.dto.UserDto;
 import com.jsp.book.service.UserService;
+import com.razorpay.RazorpayException;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -78,7 +84,7 @@ public class UserController {
 
 	@PostMapping("/forgot-password")
 	public String forgotPassword(@RequestParam String email, RedirectAttributes attributes) {
-		return userService.forgetPassword(email, attributes);
+		return userService.forgotPassword(email, attributes);
 	}
 
 	@GetMapping("/reset-password")
@@ -96,7 +102,7 @@ public class UserController {
 
 	@GetMapping("/manage-users")
 	public String manageUsers(HttpSession session, RedirectAttributes attributes, ModelMap model) {
-		return userService.manageUser(session, attributes, model);
+		return userService.manageUsers(session, attributes, model);
 	}
 
 	@GetMapping("/block/{id}")
@@ -149,7 +155,7 @@ public class UserController {
 	@GetMapping("/manage-screens/{id}")
 	public String manageScreens(@PathVariable Long id, HttpSession session, RedirectAttributes attributes,
 			ModelMap model) {
-		return userService.manageScreen(id, session, attributes, model);
+		return userService.manageScreens(id, session, attributes, model);
 	}
 
 	@GetMapping("/add-screen/{id}")
@@ -275,5 +281,4 @@ public class UserController {
 			throws IOException, WriterException {
 		return userService.confirmTicket(session, model, attributes, razorpay_order_id, razorpay_payment_id);
 	}
-}
 }

@@ -11,5 +11,7 @@ public interface ScreenRepository extends JpaRepository<Screen, Long> {
 	
 	List<Screen> findByTheater(Theater theater);
 
-	boolean existByNameAndAddress(String name, Theater theater);
+	boolean existsByName(String name);
+
+	boolean findByNameAndTheater(String name, Theater theater);
 }

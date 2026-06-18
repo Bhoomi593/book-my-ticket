@@ -1,6 +1,7 @@
 package com.jsp.book.service;
 
 import com.jsp.book.dto.UserDto;
+import com.jsp.book.entity.BookedTicket;
 
 public interface RedisService {
 	
@@ -8,12 +9,12 @@ public interface RedisService {
 
 	void saveOtp(String email, int otp);
 
-	UserDto getDtoByEmail(String email);
+	UserDto getUserDto(String email);
 
-	int getOtpByEmail(String email);
+	int getOtp(String email);
 	
-//	void saveTicket(String orderId, BookedTicket ticket);
-//	
-//	BookedTicket getTicket(String orderId);
+	void saveTicket(String orderId, BookedTicket ticket);
+	
+	BookedTicket getTicket(String orderId);
 
 }

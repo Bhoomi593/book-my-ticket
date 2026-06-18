@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor	
 @Slf4j
 public class AdminRegistration implements CommandLineRunner {
 	
@@ -23,8 +23,8 @@ public class AdminRegistration implements CommandLineRunner {
 	private final UserRepository userRepository;
 	
 	@Override
-	public void run(String... args) throws Exception {
-		if (!userRepository.existByEmail(adminEmail)) {
+	public void run(String... args) {
+		if (!userRepository.existsByEmail(adminEmail)) {
 			log.info("Admin already exists");
 			return;
 		}

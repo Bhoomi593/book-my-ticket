@@ -6,5 +6,5 @@ import com.jsp.book.entity.Theater;
 
 public interface TheaterRepository extends JpaRepository<Theater, Long> {
 
-	boolean existByNameAndAddress(String name, String address);
+	boolean existsByNameAndAddress(String name, String address);
 }

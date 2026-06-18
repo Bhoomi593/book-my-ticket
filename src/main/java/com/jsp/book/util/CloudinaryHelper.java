@@ -1,12 +1,17 @@
 package com.jsp.book.util;
 
 import java.io.IOException;
+import java.util.Map;
 
-import org.springframework.util.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.lettuce.core.dynamic.annotation.Value;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
+
+@Component	
 public class CloudinaryHelper {
 	
 	private static final String MOVIE_FOLDER = "BMT-Movies";
@@ -17,7 +22,10 @@ public class CloudinaryHelper {
 
 	private final Cloudinary cloudinary;
 
-	public CloudinaryHelper(@Value("${cloudinary.url}") String cloudinaryUrl) {
+	public CloudinaryHelper(@Value("${cloudinary.url:}") String cloudinaryUrl) {
+		if(cloudinaryUrl==null || cloudinaryUrl.isEmpty()) {
+			cloudinaryUrl="cloudinary://123456:abcdf@demo";
+		}
 		this.cloudinary = new Cloudinary(cloudinaryUrl);
 	}
 
@@ -46,7 +54,7 @@ public class CloudinaryHelper {
 	@SuppressWarnings("unchecked")
 	private String upload(byte[] data, String folder) {
 		try {
-			Map<String, Object> params = ObjectUtils.Map("folder", folder, "use_filename", true);
+			Map<String, Object> params = ObjectUtils.asMap("folder", folder, "use_filename", true);
 			return (String) cloudinary.uploader().upload(data, params).get("url");
 		} catch (IOException e) {
 			return FALLBACK_IMAGE;

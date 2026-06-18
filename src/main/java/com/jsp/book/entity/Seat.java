@@ -18,10 +18,12 @@ public class Seat {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String seatNumber;
-	private Character seatrow;
-	private String seatcolumn;
-	private String seatcategory;
+	private String seatRow;
+	private Integer seatColumn;
+	private String category;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Screen screen;
+
+	
 }
