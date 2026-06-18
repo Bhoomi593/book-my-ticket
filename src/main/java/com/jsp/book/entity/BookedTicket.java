@@ -1,6 +1,6 @@
 package com.jsp.book.entity;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,15 +13,32 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Data
-public class Screen {
+public class BookedTicket {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
-	private String type;
-	
+
+	private String movieName;
+	private String screenName;
+	private String theaterName;
+
+	@ElementCollection
+	private String[] seatNumber;
+
+	private String qrUrl;
+	private String orderId;
+	private String paymentId;
+
+	private String showDate;
+	private String showTiming;
+
+	private Double ticketPrice;
+	private Integer ticketCount;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Theater theater;
+	private User user;
+
+	private Long showId;
 
 }

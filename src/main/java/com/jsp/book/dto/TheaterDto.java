@@ -14,10 +14,13 @@ public class TheaterDto {
 
 	@Size(min=3, max=50, message="*Enter between 3~50 characters")
 	private String name;
+	
 	@Size(min=3, max=200, message="*Enter between 3~200 characters")
 	private String address;
+	
 	@NotBlank(message = "*It is required")
 	private String locationlink;
+	
 	@NotNull(message = "*It is required")
 	private MultipartFile image;
 }

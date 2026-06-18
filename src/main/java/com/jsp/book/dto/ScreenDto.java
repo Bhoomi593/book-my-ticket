@@ -9,10 +9,12 @@ import lombok.Data;
 @AllArgsConstructor
 public class ScreenDto {
 
-	@NotBlank
+	@NotBlank(message="*Screen name is required")
 	private String name;
-	@NotBlank
+	
+	@NotBlank(message="*Screen type is required")
 	private String type;
-	@NotNull
+	
+	@NotNull(message="*Theater is required")
 	private Long theaterId;
 }

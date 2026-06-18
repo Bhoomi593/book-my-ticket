@@ -1,6 +1,5 @@
 package com.jsp.book.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,17 +10,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Data
-public class Screen {
-
+@NoArgsConstructor
+public class ShowSeat {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
-	private String type;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Theater theater;
+	private Seat seat;
+
+	private boolean booked;
 
 }

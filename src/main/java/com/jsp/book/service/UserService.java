@@ -46,7 +46,7 @@ public interface UserService {
 	
 	String blockUser(Long id, HttpSession session, RedirectAttributes attributes);
 	
-	String unblockUser(Long id, HttpSession session, RedirectAttributes attributes);
+	String unBlockUser(Long id, HttpSession session, RedirectAttributes attributes);
 	
 	/*-----------------Theater---------------*/
 	
@@ -60,7 +60,7 @@ public interface UserService {
 	
 	String editTheater(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
 	
-	String updateTheater(Long id, HttpSession session, RedirectAttributes attributes, @Valid TheaterDto theaterDto, BindingResult result);
+	String updateTheater(HttpSession session, RedirectAttributes attributes, @Valid TheaterDto theaterDto, @Valid BindingResult result, Long id);
 	
 	/*--------------Screen--------------*/
 	
@@ -80,5 +80,5 @@ public interface UserService {
 	
 	String addSeats(Long id, HttpSession session, RedirectAttributes attributes, ModelMap map);
 	
-//	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
+	String saveSeats(Long id, SeatLayoutForm seatLayoutForm, HttpSession session, RedirectAttributes attributes);
 }
