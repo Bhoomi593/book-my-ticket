@@ -1,5 +1,4 @@
-server:
-  port:80
+server.port:${PORT:8080}
 spring:
   application:
     name: book-my-ticket
